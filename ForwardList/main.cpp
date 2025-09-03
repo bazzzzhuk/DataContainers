@@ -63,7 +63,6 @@ public:
 		if (!Head)return;
 		Element* Temp = Head;
 		Head = Temp->pNext;
-		Temp = nullptr;
 		delete Temp;
 	}
 	void pop_back()
@@ -75,7 +74,6 @@ public:
 			//cout << Temp->pNext;
 			Temp = Temp->pNext;
 		}
-		Temp->pNext = nullptr;
 		delete Temp->pNext;
 	}
 
