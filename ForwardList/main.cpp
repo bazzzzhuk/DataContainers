@@ -8,26 +8,23 @@ class Element
 {
 	int Data;//значение элемента	
 	Element* pNext;//Адрес следующего элемента
-	static int count;
 public:
 	Element(int Data, Element* pNext = nullptr)
 	{
 		this->Data = Data;
 		this->pNext = pNext;
 		cout << "EConstructor:\t" << this << endl;
-		count++;
 	}
 	~Element()
 	{
 		cout << "EDestructor:\t" << this << endl;
-		count--;
 	}
 	friend class ForwardList;
 };
-int Element::count = 0;
 
 class ForwardList
 {
+	int count=0;
 	Element* Head;
 public:
 	ForwardList()
@@ -38,6 +35,8 @@ public:
 	}
 	~ForwardList()
 	{
+		while(count)pop_front();
+		Head = nullptr;
 		cout << "FLDestructor" << this << endl;
 	}
 	// Adding elements
@@ -49,6 +48,7 @@ public:
 		New->pNext = Head;
 		//Переносим Голову на новый элемент (отправляем новый элемент в Голову)
 		Head = New;
+		count++;
 	}
 	void push_back(int Data)
 	{
@@ -56,11 +56,12 @@ public:
 		Element* Temp = Head;
 		while (Temp->pNext)Temp = Temp->pNext;
 		Temp->pNext = new Element(Data);
+		count++;
 	}
 	void insert(int Data, int index)
 	{
 		if (index == 0)return push_front(Data);
-		if (index >= Element::count)return push_back(Data);
+		if (index >= ForwardList::count)return push_back(Data);
 		//1.Доходим ДО нужного элемента (элемент перед добавляемым)
 		Element* Temp = Head;
 		for (int i = 0; i < index-1; i++)Temp = Temp->pNext;
@@ -70,7 +71,8 @@ public:
 		New->pNext = Temp->pNext;
 		//4. Пристыковываем предыдущий элемент у новому:
 		Temp->pNext = New;
-	}
+		count++;
+	}	
 	//  REMOVING ELEMENTS  //
 	void pop_front()
 	{
@@ -78,6 +80,7 @@ public:
 		Element* Temp = Head;
 		Head = Temp->pNext;
 		delete Temp;
+		count--;
 	}
 	void pop_back()
 	{
@@ -86,10 +89,20 @@ public:
 		while (Temp->pNext->pNext)Temp = Temp->pNext;
 		delete Temp->pNext;
 		Temp->pNext = nullptr;
+		count--;
 	}
-
-
-	// methods:
+	void erase(int index)
+	{
+		if (index == 0)return pop_front();
+		if (index >= ForwardList::count)return pop_back();
+		Element* Temp = Head;
+		for (int i = 0; i < index-2; i++)Temp = Temp->pNext;
+		Temp->pNext=Temp->pNext->pNext;
+		delete Temp->pNext->pNext;
+		Temp->pNext->pNext= nullptr;
+		count--;
+	}
+		// methods:
 	void print()const
 	{
 		Element* Temp = Head;//Temp - это итератор.
@@ -99,9 +112,10 @@ public:
 			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 			Temp = Temp->pNext;
 		}
-		cout << "Количество элементов: " << Element::count << endl;
+		cout << "Количество элементов: " << ForwardList::count << endl;
 	}
 };
+// ForwardList::count = 0;
 
 //#define	BASE_CHECK	
 void main()
@@ -162,5 +176,8 @@ void main()
 	cout << "Введите значение добавляемого элемента: "; cin >> value;
 	list1.insert(value, index);
 	list1.print();
+
+	list2.erase(0);
+	list2.print();
 
 }
