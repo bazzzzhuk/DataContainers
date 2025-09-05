@@ -15,6 +15,10 @@ public:
 		this->pNext = pNext;
 		cout << "EConstructor:\t" << this << endl;
 	}
+	int get_data()const
+	{
+		return Data;
+	}
 	~Element()
 	{
 		cout << "EDestructor:\t" << this << endl;
@@ -24,7 +28,7 @@ public:
 
 class ForwardList
 {
-	int count=0;
+	int count = 0;
 	Element* Head;
 public:
 	ForwardList()
@@ -35,9 +39,34 @@ public:
 	}
 	~ForwardList()
 	{
-		while(count)pop_front();
+		while (count)pop_front();
 		Head = nullptr;
 		cout << "FLDestructor" << this << endl;
+	}
+	//ForwardList(ForwardList&& other)
+	//{
+	//	//moveConstructor
+	//	this->count = other.count;
+	//	this->Head = other.Head;
+	//	//обнуляем принимаемый объект для того чтобы предотвратить удаление его ресурсов деструктором
+	//	//other.count = 0;
+	//	//other.Head = nullptr;
+	//	cout << "MoveConstructor:\t" << this << endl;
+
+	//}
+	int get_count()const
+	{
+		return count;
+	}
+	Element* get_head()const
+	{
+		return Head;
+	}
+	int get_data(int index)const
+	{
+		Element* Temp = Head;
+		for (int i = 0; i < index; i++)Temp = Temp->pNext;
+		return Temp->Data;
 	}
 	// Adding elements
 	void push_front(int Data)
@@ -64,7 +93,7 @@ public:
 		if (index >= ForwardList::count)return push_back(Data);
 		//1.Доходим ДО нужного элемента (элемент перед добавляемым)
 		Element* Temp = Head;
-		for (int i = 0; i < index-1; i++)Temp = Temp->pNext;
+		for (int i = 0; i < index - 1; i++)Temp = Temp->pNext;
 		//2.Создаём добавляемый элемент:
 		Element* New = new Element(Data);
 		//3.Пристыковываем новый элемент к его следующему элементу:
@@ -72,7 +101,7 @@ public:
 		//4. Пристыковываем предыдущий элемент у новому:
 		Temp->pNext = New;
 		count++;
-	}	
+	}
 	//  REMOVING ELEMENTS  //
 	void pop_front()
 	{
@@ -96,13 +125,20 @@ public:
 		if (index == 0)return pop_front();
 		if (index >= ForwardList::count)return pop_back();
 		Element* Temp = Head;
-		for (int i = 0; i < index-2; i++)Temp = Temp->pNext;
-		Temp->pNext=Temp->pNext->pNext;
+		for (int i = 0; i < index - 2; i++)Temp = Temp->pNext;
+		Temp->pNext = Temp->pNext->pNext;
 		delete Temp->pNext->pNext;
-		Temp->pNext->pNext= nullptr;
+		Temp->pNext->pNext = nullptr;
 		count--;
 	}
-		// methods:
+	// methods:
+	ForwardList& operator=(ForwardList& other)
+	{
+		cout << "!#@#" << endl;
+		other.Head = nullptr;
+		cout << "CopyAssignment:\t" << this << endl;
+		return *this;
+	}
 	void print()const
 	{
 		Element* Temp = Head;//Temp - это итератор.
@@ -115,8 +151,21 @@ public:
 		cout << "Количество элементов: " << ForwardList::count << endl;
 	}
 };
-// ForwardList::count = 0;
 
+ForwardList operator+(const ForwardList f1, ForwardList f2)
+{
+	//int i = f2.get_count();
+	Element* Temp = f1.get_head();
+	for (int i = f1.get_count() - 1; i >= 0; i--)
+	{
+		f2.push_front(f1.get_data(i));
+		//cout << "Temp " << Temp << " Temp->get_data() " << Temp->get_data() << endl;
+		Temp = Temp + 1;
+	}
+	cout << "F2" << endl;
+	f2.print();
+	return f2;
+}
 //#define	BASE_CHECK	
 void main()
 {
@@ -179,5 +228,9 @@ void main()
 
 	list2.erase(0);
 	list2.print();
+
+	//cout << list1.get_data(4) << endl;
+	ForwardList fusion = list1 + list2;
+	fusion.print();
 
 }
