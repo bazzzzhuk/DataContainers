@@ -272,29 +272,17 @@ void main()
 #endif
 
 #ifdef PLUS_CHECK
-	ForwardList list1;
-	list1.push_back(0);
-	list1.push_back(1);
-	list1.push_back(1);
-	list1.push_back(2);
-	list1.print();
-
-	ForwardList list2;
-	list2.push_back(3);
-	list2.push_back(5);
-	list2.push_back(8);
-	list2.push_back(13);
-	list2.push_back(21);
-	list2.push_back(34);
-	list2.push_back(55);
-	list2.push_back(89);
-	list2.print();
+	clock_t t_start = clock();
+	ForwardList list1(25000);
+	ForwardList list2(25000);
 
 	ForwardList fusion;
 	cout << DELIMETER;
 	fusion = list1 + list2;
 	cout << DELIMETER;
-	fusion.print();
+	clock_t t_end = clock();
+	cout << "FORWARDLIST moveSemantic test for " << double(t_end - t_start) / CLOCKS_PER_SEC << " sec. " << endl;//19.818 sec 50000 /// 4.739 25000 + 25000
+	//fusion.print();
 
 	/*int index;
 	int value;
