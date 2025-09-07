@@ -48,7 +48,7 @@ public:
 		Head = nullptr;//если список пустой, то его голова указывает на ноль.
 		cout << "FLConstructor:\t" << this << endl;
 	}
-	ForwardList(const ForwardList& other):ForwardList()
+	ForwardList(const ForwardList& other) :ForwardList()
 	{
 		//Deep copy
 		*this = other;
@@ -61,32 +61,57 @@ public:
 		{
 			//list.push_back(rand() % 100);
 			//this->push_front(rand() % 100);
-			this->push_front(NULL);
+			this->push_front(NULL); // 4.097 sec. 50000
+			//this->push_back(NULL);// 4.233 sec. 50000
 		}
-		cout << "SingleARGConstructor:\t" << this << endl;
+		//cout << "SingleARGConstructor:\t" << this << endl;
+	}
+	ForwardList(ForwardList&& other)//moveConstructor
+	{
+		this->count = other.count;
+		this->Head = other.Head;
+		other.count = 0;
+		other.Head = nullptr;
+		cout << "MoveConstructor:\t" << this << endl;
 	}
 	~ForwardList()
 	{
 		clock_t t_start = clock();
 		while (count)pop_front();
 		clock_t t_end = clock();
-		cout << "FLDestructor" << this <<"\t in time --> "<< double(t_end-t_start)/ CLOCKS_PER_SEC << endl;
+		cout << "FLDestructor" << this << "\t in time --> " << double(t_end - t_start) / CLOCKS_PER_SEC << endl;
 	}
 
 	////Operators 
-	
+
 	ForwardList& operator=(const ForwardList& other)
 	{
 		if (this == &other)return *this;//не являются ли this & other одним объектом?
+		clock_t t_start = clock();
 		while (Head)pop_front();// Старое значение объекта удаляется из памяти
 		//Deep copy
 		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
 			push_back(Temp->Data);
 
-		cout << "FLCopyAssignment:\t" << this << endl;
+		//cout << "FLCopyAssignment:\t" << this << endl;
+		clock_t t_end = clock();
+		cout << "FLCopyAssignment:\t" << this << "\t in time --> " << double(t_end - t_start) / CLOCKS_PER_SEC << endl;
 		return *this;
 	}
-	//int& operator[] (int i) { return a[i]; }
+	ForwardList& operator=(ForwardList&& other)
+	{
+		if (this == &other)return *this;
+		//delete old memory
+		delete Head;
+		//shallowCopy
+		this->count - other.count;
+		this->Head = other.Head;
+		//обнуляем принимаемый объект
+		other.count = 0;
+		other.Head = nullptr;
+		cout << "MoveAssignment:\t\t" << this << endl;
+		return *this;
+	}
 	int& operator[](int n)
 	{
 		Element* Temp = Head;
@@ -175,13 +200,6 @@ public:
 		count--;
 	}
 	// methods:
-	ForwardList& operator=(ForwardList& other)
-	{
-		cout << "!#@#" << endl;
-		other.Head = nullptr;
-		cout << "CopyAssignment:\t" << this << endl;
-		return *this;
-	}
 	void print()const
 	{
 		//Element* Temp = Head;//Temp - это итератор.
@@ -197,24 +215,10 @@ public:
 	}
 };
 
-//ForwardList operator+(const ForwardList f1, ForwardList f2)
-//{
-//	//int i = f2.get_count();
-//	Element* Temp = f1.get_head();
-//	for (int i = f1.get_count() - 1; i >= 0; i--)
-//	{
-//		f2.push_front(f1.get_data(i));
-//		//cout << "Temp " << Temp << " Temp->get_data() " << Temp->get_data() << endl;
-//		Temp = Temp + 1;
-//	}
-//	cout << "F2" << endl;
-//	f2.print();
-//	return f2;
-//}
 ForwardList operator+(const ForwardList& left, const ForwardList& right)
 {
 	ForwardList	fusion;
-	for (Element* Temp = left.get_head(); Temp; Temp=Temp->pNext)
+	for (Element* Temp = left.get_head(); Temp; Temp = Temp->pNext)
 	{
 		fusion.push_back(Temp->get_data());
 
@@ -228,8 +232,10 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 
 
 //#define	BASE_CHECK	
-//#define PLUS_CHECK
+#define PLUS_CHECK
 //#define PERFORMANCE_CHECK
+//#define SINGLE_ARG_CONSTR_CHECK
+
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -264,6 +270,7 @@ void main()
 	list.print();*/
 	cout << DELIMETER;
 #endif
+
 #ifdef PLUS_CHECK
 	ForwardList list1;
 	list1.push_back(0);
@@ -315,15 +322,22 @@ void main()
 		list.push_front(rand() % 100);
 	}
 	clock_t t_end = clock();
-	cout << "FORWARDLIST filled for "<<double(t_end-t_start)/CLOCKS_PER_SEC<<" sec. ";
+	cout << "FORWARDLIST filled for " << double(t_end - t_start) / CLOCKS_PER_SEC << " sec. ";
 	system("PAUSE");
 #endif // PERFORMANCE_CHECK
 
-	ForwardList list(5);
-	list.print();
+#ifdef SINGLE_ARG_CONSTR_CHECK
+	ForwardList list(50000);//50000 - 4.298 sec.
+	//list.print();
+	clock_t t_start = clock();
 	for (int i = 0; i < list.get_count(); i++)
 		list[i] = rand() % 100;
-	for (int i = 0; i < list.get_count(); i++)
-		cout << list[i] << tab;
+	clock_t t_end = clock();
+	cout << "FORWARDLIST filled with [] for " << double(t_end - t_start) / CLOCKS_PER_SEC << " sec. ";
+	//for (int i = 0; i < list.get_count(); i++)cout << list[i] << tab;
 	cout << endl;
+#endif // SINGLE_ARG_CONSTR_CHECK
+
+
+
 }
