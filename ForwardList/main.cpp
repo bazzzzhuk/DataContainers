@@ -1,6 +1,9 @@
 ﻿#include<iostream>
 #include<time.h>
 using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
 
 #define tab "\t"
 #define DELIMETER "----------------------\n"
@@ -57,7 +60,8 @@ public:
 		for (int i = 0; i < n; i++)
 		{
 			//list.push_back(rand() % 100);
-			this->push_front(5);
+			//this->push_front(rand() % 100);
+			this->push_front(NULL);
 		}
 		cout << "SingleARGConstructor:\t" << this << endl;
 	}
@@ -82,18 +86,14 @@ public:
 		cout << "FLCopyAssignment:\t" << this << endl;
 		return *this;
 	}
+	//int& operator[] (int i) { return a[i]; }
+	int& operator[](int n)
+	{
+		Element* Temp = Head;
+		for (int i = 0; i < n; i++)Temp = Temp->pNext;
+		return Temp->Data;
+	}
 
-	//ForwardList(ForwardList&& other)
-	//{
-	//	//moveConstructor
-	//	this->count = other.count;
-	//	this->Head = other.Head;
-	//	//обнуляем принимаемый объект для того чтобы предотвратить удаление его ресурсов деструктором
-	//	//other.count = 0;
-	//	//other.Head = nullptr;
-	//	cout << "MoveConstructor:\t" << this << endl;
-
-	//}
 	int get_count()const
 	{
 		return count;
@@ -321,5 +321,9 @@ void main()
 
 	ForwardList list(5);
 	list.print();
-
+	for (int i = 0; i < list.get_count(); i++)
+		list[i] = rand() % 100;
+	for (int i = 0; i < list.get_count(); i++)
+		cout << list[i] << tab;
+	cout << endl;
 }
