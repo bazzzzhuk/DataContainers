@@ -51,6 +51,16 @@ public:
 		*this = other;
 		cout << "FLCopyConstructor:\t" << this << endl;
 	}
+	ForwardList(int n)
+	{
+		Head = nullptr;
+		for (int i = 0; i < n; i++)
+		{
+			//list.push_back(rand() % 100);
+			this->push_front(5);
+		}
+		cout << "SingleARGConstructor:\t" << this << endl;
+	}
 	~ForwardList()
 	{
 		clock_t t_start = clock();
@@ -218,7 +228,7 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 
 
 //#define	BASE_CHECK	
-#define PLUS_CHECK
+//#define PLUS_CHECK
 //#define PERFORMANCE_CHECK
 void main()
 {
@@ -308,5 +318,8 @@ void main()
 	cout << "FORWARDLIST filled for "<<double(t_end-t_start)/CLOCKS_PER_SEC<<" sec. ";
 	system("PAUSE");
 #endif // PERFORMANCE_CHECK
+
+	ForwardList list(5);
+	list.print();
 
 }
