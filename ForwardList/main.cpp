@@ -7,7 +7,7 @@ using std::endl;
 
 #define tab "\t"
 #define DELIMETER "----------------------\n"
-
+class ForwardList;
 class Element
 {
 	int Data;//значение элемента	
@@ -33,8 +33,46 @@ public:
 #endif // DEBUG
 
 	}
+	friend class Iterator;
 	friend class ForwardList;
 	friend class ForwardList operator+(const ForwardList& left, const ForwardList& right);
+};
+
+
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp = nullptr) :Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~Iterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	bool operator==(const Iterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	int operator*()const
+	{
+		return Temp->Data;
+	}
+	int& operator*()
+	{
+		return Temp->Data;
+	}
+
 };
 
 class ForwardList
@@ -54,10 +92,18 @@ public:
 		*this = other;
 		cout << "FLCopyConstructor:\t" << this << endl;
 	}
-	ForwardList(int count) :ForwardList()
+	explicit ForwardList(int count) :ForwardList()
 	{
 		while (count--)push_front(0);
 		cout << "FLCOUNTConstructor:\t" << this << endl;
+	}
+	ForwardList(const std::initializer_list<int>& il) :ForwardList()
+	{
+		cout << typeid(il.begin()).name() << endl;
+		for (int const* it = il.begin(); it != il.end(); it++)
+		{
+			push_back(*it);
+		}
 	}
 	ForwardList(ForwardList&& other) :ForwardList()
 	{
@@ -125,10 +171,18 @@ public:
 		for (int i = 0; i < index; i++)Temp = Temp->pNext;
 		return Temp->Data;
 	}
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
+	}
 
 
-	// Adding elements
-	void push_front(int Data)
+		// Adding elements
+		void push_front(int Data)
 	{
 		////создаем элемент и сохраняем в него добавляемое значение
 		//Element* New = new Element(Data);
@@ -205,7 +259,7 @@ public:
 	void reverse()
 	{
 		ForwardList reverse;//этот список будет задом-наперёд
-		while(Head)//пока список содержит элементы 
+		while (Head)//пока список содержит элементы 
 		{
 			reverse.push_front(Head->Data);//добавляем головной элемент 
 			pop_front();//и удаляем начальный элемент списка
@@ -231,6 +285,11 @@ public:
 			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 		cout << "Количество элементов: " << ForwardList::count << endl;
 	}
+	/*void Print()
+	{
+	cout typeid(arr).name()<<endl;
+	cout <<sizeof(arr)/sizeof(arr[0])<<endl;
+	}*/
 };
 
 ForwardList operator+(const ForwardList& left, const ForwardList& right)
@@ -255,7 +314,8 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 //#define PERFORMANCE_CHECK
 //#define SUBSCRIPTOR_OPER_CHECK
 //#define COPY_SEMANTIC_PERFORMANCE_CHECK
-#define MOVE_SEMANTIC_CHECK
+//#define MOVE_SEMANTIC_CHECK
+//#define RANGE_BASED_FOR_ARRAY
 
 void main()
 {
@@ -315,7 +375,7 @@ void main()
 	list3 = list1 + list2;
 	cout << DELIMETER;
 	for (int i = 0; i < list3.get_count(); i++)cout << list3[i] << tab; cout << endl;
-	
+
 
 	/*int index;
 	int value;
@@ -406,5 +466,26 @@ void main()
 	cout << "lists concatenated for " << double(t_end - t_start) / CLOCKS_PER_SEC << " sec." << endl;
 
 #endif // MOVE_SEMANTIC_CHECK
+#ifdef RANGE_BASED_FOR_ARRAY
 
+	int arr[] = { 3,5,8,13,21 };
+	for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+	{
+		cout << arr[i] << tab;
+	}
+	cout << endl;
+	//Range-based for - for для диапазона. Под диапазоном понимается контейнер (какой-то набор элементов)
+	//
+	for (int i : arr)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+	cout << typeid(arr).name() << endl;
+	Print(arr);
+#endif // RANGE_BASED_FOR_ARRAY
+
+	ForwardList list = { 3,5,8,13,21 };// Перечисление значений в фигурных скобках через запятую неявно создают объект класса 'initializer list'
+	list.print();
+	for (int i : list)cout << i << tab; cout << endl;
 }
