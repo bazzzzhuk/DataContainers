@@ -107,6 +107,26 @@ public:
 
 		size++;
 	}
+	void erase(int Index)
+	{
+		if (Index < 0)return;
+		if (Index == 0 || size == 0)return pop_front();
+		if (Index >= size)return pop_back();
+		Element* Temp;
+		if (Index < size / 2)
+		{
+			Temp = Head;
+			for (int i = 0; i < Index; i++)Temp = Temp->pNext;
+		}
+		else
+		{
+			Temp = Tail;
+			for (int i = 0; i < size - Index - 1; i++)Temp = Temp->pPrev;
+		}
+		Temp->pPrev->pNext = Temp->pNext;
+		Temp->pNext->pPrev = Temp->pPrev;
+		delete Temp;
+	}
 
 	//  REMOVING ELEMENTS:
 
@@ -174,8 +194,8 @@ public:
 	}
 };
 
-//#define BASE_CHECK
-#define HOME_WORK
+#define BASE_CHECK
+//#define HOME_WORK
 
 void main()
 {
@@ -204,6 +224,13 @@ void main()
 	list.insert(value, index);
 	list.print();
 	list.reverse_print();
+
+	cout << "Enter index-in element: "; cin >> index;
+	list.erase(index);
+	list.print();
+
+
+
 
 #endif // BASE_CHECK
 #ifdef HOME_WORK
