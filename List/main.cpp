@@ -79,7 +79,7 @@ public:
 	{
 		Head = Tail = nullptr;
 		size = 0;
-		cout << "LConstructor:\t" << this << endl;
+		cout << "ListConstructor:\t" << this << endl;
 	}
 	List(const std::initializer_list<int>& il) :List()
 	{
@@ -89,7 +89,7 @@ public:
 	{
 		//Deep copy
 		*this = other;
-		cout << "FLCopyConstructor:\t" << this << endl;
+		cout << "ListCopyConstructor:\t" << this << endl;
 	}
 	List(List&& other) :List()
 	{
@@ -99,7 +99,7 @@ public:
 	{
 		while (Tail)pop_back();
 
-		cout << "LDestructor:\t" << this << endl;
+		cout << "ListDestructor:\t" << this << endl;
 	}
 ////////////////////////////////////////
 	List& operator=(const List& other)
@@ -215,6 +215,7 @@ public:
 		Temp->pPrev->pNext = Temp->pNext;
 		Temp->pNext->pPrev = Temp->pPrev;
 		delete Temp;
+		size--;
 	}
 
 	//  REMOVING ELEMENTS:
@@ -335,6 +336,7 @@ void main()
 	List list2 = {34,55,89};
 	List list3 = list1 + list2;
 	List list4 = list3;
+	list4.erase(1);
 	list1.print();
 	list2.print();
 	list3.print();
@@ -342,5 +344,6 @@ void main()
 	for (int i : list2)cout << i << tab; cout << endl;
 	for (int i : list3)cout << i << tab; cout << endl;
 	for (int i : list4)cout << i << tab; cout << endl;
+	list4.print();
 #endif // HOME_WORK
 }
