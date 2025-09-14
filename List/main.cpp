@@ -1,5 +1,8 @@
 #include<iostream>
 using namespace std;
+using std::cout;
+using std::endl;
+using std::cin;
 
 #define tab "\t"
 #define delimiter "\n---------------------------------\n"
@@ -11,7 +14,6 @@ class Iterator;
 class Element
 {
 	int Data;
-	
 	Element* pNext;
 	Element* pPrev;
 public:
@@ -19,12 +21,7 @@ public:
 		:Data(Data), pNext(pNext), pPrev(pPrev)
 	{
 		cout << "EConstructor:\t" << this << endl;
-	}
-	Element* get_pNext()const
-	{
-		return this->pNext;
-	}
-
+	}	
 	~Element()
 	{
 		cout << "EDestructor:\t" << this << endl;
@@ -71,17 +68,12 @@ public:
 	{
 		return Temp->Data;
 	}
-	friend class List;
-	friend class Element;
 };
 class List
 {
 	Element* Head;
 	Element* Tail;
-	
-	 //Объекты классов и структур и указатели на эти объекты можно объявлять 
-					//непоссредственно после описания классов и структур
-	size_t size;	//Размер списка. size_t - это typedef на unsigned int
+	size_t size;//Не использовал..
 public:
 	List()
 	{
@@ -93,18 +85,33 @@ public:
 	{
 		for (int const* it = il.begin(); it != il.end(); it++)push_back(*it);
 	}
+	List(const List& other) :List()
+	{
+		//Deep copy
+		*this = other;
+		cout << "FLCopyConstructor:\t" << this << endl;
+	}
 	List(List&& other) :List()
 	{
 		*this = std::move(other);
 	}
 	~List()
 	{
-		//while (Head)pop_front();
 		while (Tail)pop_back();
 
 		cout << "LDestructor:\t" << this << endl;
 	}
 ////////////////////////////////////////
+	List& operator=(const List& other)
+	{
+		if (this == &other)return *this;//не являются ли this & other одним объектом?
+		while (Head)pop_front();// Старое значение объекта удаляется из памяти
+		//Deep copy
+		for (Element* Temp = other.Head; Temp; Temp = Temp->pNext)
+			push_back(Temp->Data);
+		cout << "ListCopyAssignment:\t" << this << endl;
+		return *this;
+	}
 	List& operator=(List&& other)
 	{
 		if (this == &other)return *this;
@@ -114,7 +121,6 @@ public:
 		cout << "ListMoveAssignment:\t" << this << endl;
 		return *this;
 	}
-
 	Iterator begin()
 	{
 		return Head;
@@ -123,7 +129,6 @@ public:
 	{
 		return nullptr;
 	}
-
 	//   ADDING ELEMENTS
 	void push_front(int Data)
 	{
@@ -276,11 +281,6 @@ public:
 		cout << "Количество элементов списка: " << size;
 		cout << delimiter << endl;
 	}
-	friend class Iterator;
-	friend class Element;
-	//friend Iterator& operator++()const;
-	friend Iterator begin();
-	friend class List operator+(const List& left, const List& right);
 };
 
 List operator+(List& left, List& right)
@@ -334,11 +334,13 @@ void main()
 	List list1 = {3,5,8,13,21};
 	List list2 = {34,55,89};
 	List list3 = list1 + list2;
+	List list4 = list3;
 	list1.print();
 	list2.print();
 	list3.print();
 	for (int i : list1)cout << i << tab; cout << endl;
 	for (int i : list2)cout << i << tab; cout << endl;
 	for (int i : list3)cout << i << tab; cout << endl;
+	for (int i : list4)cout << i << tab; cout << endl;
 #endif // HOME_WORK
 }
