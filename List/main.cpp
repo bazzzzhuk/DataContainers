@@ -4,25 +4,82 @@ using namespace std;
 #define tab "\t"
 #define delimiter "\n---------------------------------\n"
 
+class List;
+class Element;
+class Iterator;
+
+class Element
+{
+	int Data;
+	
+	Element* pNext;
+	Element* pPrev;
+public:
+	Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
+		:Data(Data), pNext(pNext), pPrev(pPrev)
+	{
+		cout << "EConstructor:\t" << this << endl;
+	}
+	Element* get_pNext()const
+	{
+		return this->pNext;
+	}
+
+	~Element()
+	{
+		cout << "EDestructor:\t" << this << endl;
+	}
+	friend class List;
+	friend class Iterator;
+};
+class Iterator
+{
+	Element* Temp;
+public:
+	Iterator(Element* Temp=nullptr) :Temp(Temp)
+	{
+		cout << "ItConstructor:\t" << this << endl;
+	}
+	~Iterator()
+	{
+		cout << "ItDestructor:\t" << this << endl;
+	}
+	Iterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+	Iterator operator++(int)
+	{
+		Iterator old = *this;
+		Temp = Temp->pNext;
+		return old;
+	}
+	bool operator==(const Iterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const Iterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	int operator*()const
+	{
+		return Temp->Data;
+	}
+	int& operator*()
+	{
+		return Temp->Data;
+	}
+	friend class List;
+	friend class Element;
+};
 class List
 {
-	class Element
-	{
-		int Data;
-		Element* pNext;
-		Element* pPrev;
-	public:
-		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
-			:Data(Data), pNext(pNext), pPrev(pPrev)
-		{
-			cout << "EConstructor:\t" << this << endl;
-		}
-		~Element()
-		{
-			cout << "EDestructor:\t" << this << endl;
-		}
-		friend class List;
-	}*Head, * Tail; //Объекты классов и структур и указатели на эти объекты можно объявлять 
+	Element* Head;
+	Element* Tail;
+	
+	 //Объекты классов и структур и указатели на эти объекты можно объявлять 
 					//непоссредственно после описания классов и структур
 	size_t size;	//Размер списка. size_t - это typedef на unsigned int
 public:
@@ -32,12 +89,39 @@ public:
 		size = 0;
 		cout << "LConstructor:\t" << this << endl;
 	}
+	List(const std::initializer_list<int>& il) :List()
+	{
+		for (int const* it = il.begin(); it != il.end(); it++)push_back(*it);
+	}
+	List(List&& other) :List()
+	{
+		*this = std::move(other);
+	}
 	~List()
 	{
 		//while (Head)pop_front();
 		while (Tail)pop_back();
 
 		cout << "LDestructor:\t" << this << endl;
+	}
+////////////////////////////////////////
+	List& operator=(List&& other)
+	{
+		if (this == &other)return *this;
+		while (Head)pop_front();
+		this->Head = other.Head;
+		other.Head = nullptr;
+		cout << "ListMoveAssignment:\t" << this << endl;
+		return *this;
+	}
+
+	Iterator begin()
+	{
+		return Head;
+	}
+	Iterator end()
+	{
+		return nullptr;
 	}
 
 	//   ADDING ELEMENTS
@@ -192,10 +276,23 @@ public:
 		cout << "Количество элементов списка: " << size;
 		cout << delimiter << endl;
 	}
+	friend class Iterator;
+	friend class Element;
+	//friend Iterator& operator++()const;
+	friend Iterator begin();
+	friend class List operator+(const List& left, const List& right);
 };
 
-#define BASE_CHECK
-//#define HOME_WORK
+List operator+(List& left, List& right)
+{
+	List fusion;
+	for (int i : left) fusion.push_back(i);
+	for (int i : right) fusion.push_back(i);	
+	return fusion;
+}
+
+//#define BASE_CHECK
+#define HOME_WORK
 
 void main()
 {
@@ -237,6 +334,9 @@ void main()
 	List list1 = {3,5,8,13,21};
 	List list2 = {34,55,89};
 	List list3 = list1 + list2;
+	list1.print();
+	list2.print();
+	list3.print();
 	for (int i : list1)cout << i << tab; cout << endl;
 	for (int i : list2)cout << i << tab; cout << endl;
 	for (int i : list3)cout << i << tab; cout << endl;
