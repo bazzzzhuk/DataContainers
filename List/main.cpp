@@ -366,7 +366,7 @@ List<T> operator+(const List<T>& left, const List<T>& right)
 }
 
 //#define BASE_CHECK
-#define HOME_WORK
+//#define HOME_WORK
 
 void main()
 {
@@ -405,8 +405,8 @@ void main()
 
 #endif // BASE_CHECK
 #ifdef HOME_WORK
-	List<int> list1 = {3,5,8,13,21};
-	List<int> list2 = {34,55,89};
+	List<int> list1 = { 3,5,8,13,21 };
+	List<int> list2 = { 34,55,89 };
 	//list1.print();
 	//list2.print();
 	List<int> list3 = list1 + list2;
@@ -418,15 +418,23 @@ void main()
 		cout << *it << tab;
 	}
 	cout << endl;
-	for (List<int>::Iterator it = list1.begin();it!=list1.end();++it)
-	{ 
+	for (List<int>::Iterator it = list1.begin(); it != list1.end(); ++it)
+	{
 		*it *= 100;
 	}
-	for(List<int>::ConstReverseIterator it = list1.rbegin(); it != list1.rend();++it)
+	for (List<int>::ConstReverseIterator it = list1.rbegin(); it != list1.rend(); ++it)
 	{
 		//*it *= 100;
 		cout << *it << tab;
 	}
 	cout << endl;
 #endif // HOME_WORK
+
+	List<double> d_list = { 2.7, 3.14, 5.8, 8.3 };
+	for (double i : d_list)cout << i << tab; cout << endl;
+	List < std::string> s_list = { "’орошо", "живЄт", "на", "—вете", "¬инни", "ѕух" };
+	for (std::string i : s_list)cout << i << tab; cout << endl;
+	for (List<std::string>::ReverseIterator it = s_list.rbegin(); it != s_list.rend(); ++it)
+		cout << *it << tab;
+	cout << endl;
 }
