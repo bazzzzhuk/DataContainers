@@ -31,20 +31,9 @@ class List
 		~ConstBaseIterator(){}
 
 		// comparison
-		bool operator==(const ConstBaseIterator& other)const
-		{
-			return this->Temp == other.Temp;
-		}
-		bool operator!=(const ConstBaseIterator& other)const
-		{
-			return this->Temp != other.Temp;
-		}
-
-		T operator*()const//в константном итераторе должен быть константный оператор разименования
-			//	здесь ни в коем случае не должно быть обычного оператора разименования
-		{
-			return Temp->Data;
-		}
+		bool operator==(const ConstBaseIterator& other)const;
+		bool operator!=(const ConstBaseIterator& other)const;
+		T operator*()const;
 	};
 public:
 	class ConstIterator:public ConstBaseIterator
@@ -150,6 +139,7 @@ public:
 	void print()const;
 	void reverse_print()const;
 };
+/////////-----> class Element
 template<typename T>List<T>::Element::Element(T Data, typename List<T>::Element* pNext, typename List<T>::Element* pPrev)
 	:Data(Data), pNext(pNext), pPrev(pPrev)
 {
@@ -159,8 +149,28 @@ template<typename T>List<T>::Element::~Element()
 {
 	cout << "EDestructor:\t" << this << endl;
 }
+//////////-----> class ConstBaseIterator
+template<typename T>
+bool List<T>::ConstBaseIterator::operator==(const ConstBaseIterator& other)const
+{
+	return this->Temp == other.Temp;
+}
+template<typename T>
+bool List<T>::ConstBaseIterator::operator!=(const ConstBaseIterator& other)const
+{
+	return this->Temp != other.Temp;
+}
+template<typename T>
+T List<T>::ConstBaseIterator::operator*()const
+{
+	return Temp->Data;
+}
+//////////---
 
-//////////----------
+//////////---
+
+
+//////////<----------
 template<typename T>
 typename List<T>::ConstIterator List<T>::begin()const
 {
