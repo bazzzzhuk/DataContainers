@@ -49,20 +49,11 @@ public:
 	class ConstReverseIterator:public ConstBaseIterator
 	{
 	public:
-		ConstReverseIterator(Element* Temp = nullptr):ConstBaseIterator(Temp){}
-		~ConstReverseIterator(){}
+		ConstReverseIterator(Element* Temp = nullptr);
+		~ConstReverseIterator();
 		//Incr/Decr
-			ConstReverseIterator& operator++()
-		{
-				ConstBaseIterator::Temp = ConstBaseIterator::Temp->pPrev;
-			return *this;
-		}
-		ConstReverseIterator operator++(int)
-		{
-			ConstReverseIterator old = *this;
-			ConstBaseIterator::Temp = ConstBaseIterator::Temp->pPrev;
-			return old;
-		}
+		ConstReverseIterator& operator++();
+		ConstReverseIterator operator++(int);
 		ConstReverseIterator& operator--();
 		ConstReverseIterator operator--(int);
 	};
@@ -175,8 +166,36 @@ typename List<T>::ConstIterator List<T>::ConstIterator::operator--(int)
 	return old;
 }
 
-//////////---
-
+//////////----->class ConstReverseIterator
+template<typename T>List<T>::ConstReverseIterator::ConstReverseIterator(Element* Temp) :ConstBaseIterator(Temp) {}
+template<typename T>List<T>::ConstReverseIterator::~ConstReverseIterator() {}
+//Incr/Decr
+template<typename T>
+typename List<T>::ConstReverseIterator& List<T>::ConstReverseIterator::operator++()
+{
+	ConstBaseIterator::Temp = ConstBaseIterator::Temp->pPrev;
+	return *this;
+}
+template<typename T>
+typename List<T>::ConstReverseIterator List<T>::ConstReverseIterator::operator++(int)
+{
+	ConstReverseIterator old = *this;
+	ConstBaseIterator::Temp = ConstBaseIterator::Temp->pPrev;
+	return old;
+}
+template<typename T>
+typename List<T>::ConstReverseIterator& List<T>::ConstReverseIterator::operator--()
+{
+	ConstBaseIterator::Temp = ConstBaseIterator::Temp->pNext;
+	return *this;
+}
+template<typename T>
+typename List<T>::ConstReverseIterator List<T>::ConstReverseIterator::operator--(int)
+{
+	ConstReverseIterator old = *this;
+	ConstBaseIterator::Temp = ConstBaseIterator::Temp->pNext;
+	return old;
+}
 
 //////////<----------
 template<typename T>
