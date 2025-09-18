@@ -15,15 +15,8 @@ class List
 		Element* pNext;
 		Element* pPrev;
 	public:
-		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr)
-			:Data(Data), pNext(pNext), pPrev(pPrev)
-		{
-			cout << "EConstructor:\t" << this << endl;
-		}
-		~Element()
-		{
-			cout << "EDestructor:\t" << this << endl;
-		}
+		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr);
+		~Element();
 		friend class List;
 	}*Head, * Tail; //ќбъекты классов и структур и указатели на эти объекты можно объ€вл€ть 
 					//непоссредственно после описани€ классов и структур
@@ -157,6 +150,17 @@ public:
 	void print()const;
 	void reverse_print()const;
 };
+template<typename T>List<T>::Element::Element(T Data, typename List<T>::Element* pNext, typename List<T>::Element* pPrev)
+	:Data(Data), pNext(pNext), pPrev(pPrev)
+{
+	cout << "EConstructor:\t" << this << endl;
+}
+template<typename T>List<T>::Element::~Element()
+{
+	cout << "EDestructor:\t" << this << endl;
+}
+
+//////////----------
 template<typename T>
 typename List<T>::ConstIterator List<T>::begin()const
 {
