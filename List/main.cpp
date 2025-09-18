@@ -1,4 +1,4 @@
-#include<iostream>
+п»ї#include<iostream>
 using namespace std;
 using std::cout;
 using std::cin;
@@ -18,12 +18,12 @@ class List
 		Element(T Data, Element* pNext = nullptr, Element* pPrev = nullptr);
 		~Element();
 		friend class List;
-	}*Head, * Tail; //Объекты классов и структур и указатели на эти объекты можно объявлять 
-					//непоссредственно после описания классов и структур
-	size_t size;	//Размер списка. size_t - это typedef на unsigned int
+	}*Head, * Tail; //РћР±СЉРµРєС‚С‹ РєР»Р°СЃСЃРѕРІ Рё СЃС‚СЂСѓРєС‚СѓСЂ Рё СѓРєР°Р·Р°С‚РµР»Рё РЅР° СЌС‚Рё РѕР±СЉРµРєС‚С‹ РјРѕР¶РЅРѕ РѕР±СЉСЏРІР»СЏС‚СЊ 
+					//РЅРµРїРѕСЃСЃСЂРµРґСЃС‚РІРµРЅРЅРѕ РїРѕСЃР»Рµ РѕРїРёСЃР°РЅРёСЏ РєР»Р°СЃСЃРѕРІ Рё СЃС‚СЂСѓРєС‚СѓСЂ
+	size_t size;	//Р Р°Р·РјРµСЂ СЃРїРёСЃРєР°. size_t - СЌС‚Рѕ typedef РЅР° unsigned int
 	class ConstBaseIterator
 	{
-		//этот класс обюбщает свойства разных итераторов
+		//СЌС‚РѕС‚ РєР»Р°СЃСЃ РѕР±СЋР±С‰Р°РµС‚ СЃРІРѕР№СЃС‚РІР° СЂР°Р·РЅС‹С… РёС‚РµСЂР°С‚РѕСЂРѕРІ
 	protected:
 		Element* Temp;
 	public:
@@ -97,7 +97,15 @@ public:
 	void print()const;
 	void reverse_print()const;
 };
-/////////-----> class Element
+/////////-----> 
+#define class_Element
+#define class_ConstBaseIterator
+#define class_ConstIterator
+#define class_ConstReverseIterator
+#define class_Iterator
+#define Iclass_ReverseIterator
+/////////-----> 
+#ifdef class_Element
 template<typename T>List<T>::Element::Element(T Data, typename List<T>::Element* pNext, typename List<T>::Element* pPrev)
 	:Data(Data), pNext(pNext), pPrev(pPrev)
 {
@@ -107,7 +115,9 @@ template<typename T>List<T>::Element::~Element()
 {
 	cout << "EDestructor:\t" << this << endl;
 }
-//////////-----> class ConstBaseIterator
+#endif
+//////////-----> 
+#ifdef class_ConstBaseIterator
 
 template<typename T>
 List<T>::ConstBaseIterator::ConstBaseIterator(typename List<T>::Element* Temp) :Temp(Temp) {}
@@ -128,7 +138,9 @@ T List<T>::ConstBaseIterator::operator*()const
 {
 	return Temp->Data;
 }
-//////////----->class ConstIterator
+#endif
+//////////----->
+#ifdef class_ConstIterator
 template<typename T>List<T>::ConstIterator::ConstIterator(typename List<T>::Element* Temp)
 	:ConstBaseIterator(Temp) {}
 template<typename T>
@@ -159,8 +171,9 @@ typename List<T>::ConstIterator List<T>::ConstIterator::operator--(int)
 	ConstBaseIterator::Temp = ConstBaseIterator::Temp->pPrev;
 	return old;
 }
-
-//////////----->class ConstReverseIterator
+#endif
+//////////----->
+#ifdef class_ConstReverseIterator
 template<typename T>List<T>::ConstReverseIterator::ConstReverseIterator(Element* Temp) :ConstBaseIterator(Temp) {}
 template<typename T>List<T>::ConstReverseIterator::~ConstReverseIterator() {}
 //Incr/Decr
@@ -190,7 +203,9 @@ typename List<T>::ConstReverseIterator List<T>::ConstReverseIterator::operator--
 	ConstBaseIterator::Temp = ConstBaseIterator::Temp->pNext;
 	return old;
 }
-//////////----->class Iterator
+#endif
+//////////----->
+#ifdef class_Iterator
 template<typename T>
 List<T>::Iterator::Iterator(Element* Temp) : ConstIterator(Temp) {}
 template<typename T>
@@ -200,7 +215,9 @@ typename T& List<T>::Iterator::operator*()
 {
 	return ConstBaseIterator::Temp->Data;
 }
-//////////----->Iclass ReverseIterator
+#endif
+//////////----->
+#ifdef Iclass_ReverseIterator
 template<typename T>
 List<T>::ReverseIterator::ReverseIterator(Element* Temp) :ConstReverseIterator(Temp) {}
 template<typename T>
@@ -210,7 +227,8 @@ typename T& List<T>::ReverseIterator::operator*()
 {
 	return ConstBaseIterator::Temp->Data;
 }
-//////////<-----
+#endif
+//////////<----- IN LESSON
 template<typename T>
 typename List<T>::ConstIterator List<T>::begin()const
 {
@@ -299,12 +317,12 @@ void List<T>::push_front(T Data)
 	Element* New = new Element(Data);
 	if (Head == nullptr && Tail == nullptr)Head = Tail = New; else
 	{
-		//Создаем элемент в котором будет храниться добавляемое значение
-		//2.Пристыковываем новый элемент к списку:
+		//РЎРѕР·РґР°РµРј СЌР»РµРјРµРЅС‚ РІ РєРѕС‚РѕСЂРѕРј Р±СѓРґРµС‚ С…СЂР°РЅРёС‚СЊСЃСЏ РґРѕР±Р°РІР»СЏРµРјРѕРµ Р·РЅР°С‡РµРЅРёРµ
+		//2.РџСЂРёСЃС‚С‹РєРѕРІС‹РІР°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ Рє СЃРїРёСЃРєСѓ:
 		New->pNext = Head;
-		//3.Пристыковываем начальный элемент списка к новому элементу:
+		//3.РџСЂРёСЃС‚С‹РєРѕРІС‹РІР°РµРј РЅР°С‡Р°Р»СЊРЅС‹Р№ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР° Рє РЅРѕРІРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ:
 		Head->pPrev = New;
-		//4.Делаем новый элемент начальным элементом списка:
+		//4.Р”РµР»Р°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ РЅР°С‡Р°Р»СЊРЅС‹Рј СЌР»РµРјРµРЅС‚РѕРј СЃРїРёСЃРєР°:
 		Head = New;
 	}
 	size++;
@@ -319,11 +337,11 @@ void List<T>::push_back(T Data)
 	}
 	else
 	{
-		//цепляем новый элемент за хвост списка:
+		//С†РµРїР»СЏРµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ Р·Р° С…РІРѕСЃС‚ СЃРїРёСЃРєР°:
 		New->pPrev = Tail;
-		//Пристыковываем список к новому элементу:
+		//РџСЂРёСЃС‚С‹РєРѕРІС‹РІР°РµРј СЃРїРёСЃРѕРє Рє РЅРѕРІРѕРјСѓ СЌР»РµРјРµРЅС‚Сѓ:
 		Tail->pNext = New;
-		//Делаем новый элемент хвостом списка:
+		//Р”РµР»Р°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ С…РІРѕСЃС‚РѕРј СЃРїРёСЃРєР°:
 		Tail = New;
 	}
 	size++;
@@ -335,7 +353,7 @@ void List<T>::insert(T Data, int Index)
 	if (Index < 0)return;
 	if (Index == 0 || size == 0)return push_front(Data);
 	if (Index >= size)return push_back(Data);
-	//1.Доходим до нужного элемента:
+	//1.Р”РѕС…РѕРґРёРј РґРѕ РЅСѓР¶РЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°:
 	Element* Temp;
 	if (Index < size / 2)
 	{
@@ -348,15 +366,15 @@ void List<T>::insert(T Data, int Index)
 		for (int i = 0; i < size - Index - 1; i++)Temp = Temp->pPrev;
 	}
 	///////////////////////////////////////////////////////////////////////
-	//Независимо от того, каким образом мы дошли до нужного элемента: 
-	// с начала списка или с конца списка, процедура добавления элемента будет идентичной
+	//РќРµР·Р°РІРёСЃРёРјРѕ РѕС‚ С‚РѕРіРѕ, РєР°РєРёРј РѕР±СЂР°Р·РѕРј РјС‹ РґРѕС€Р»Рё РґРѕ РЅСѓР¶РЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°: 
+	// СЃ РЅР°С‡Р°Р»Р° СЃРїРёСЃРєР° РёР»Рё СЃ РєРѕРЅС†Р° СЃРїРёСЃРєР°, РїСЂРѕС†РµРґСѓСЂР° РґРѕР±Р°РІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р° Р±СѓРґРµС‚ РёРґРµРЅС‚РёС‡РЅРѕР№
 	////////////////////////////////////////////////////////////////
-	//2. Создаём новый элемент
+	//2. РЎРѕР·РґР°С‘Рј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚
 	Element* New = new Element(Data);
-	//3. Пристыковываем новый элемент к списку
+	//3. РџСЂРёСЃС‚С‹РєРѕРІС‹РІР°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ Рє СЃРїРёСЃРєСѓ
 	New->pNext = Temp;
 	New->pPrev = Temp->pPrev;
-	//4. Вклиниваем новый элемент в список:
+	//4. Р’РєР»РёРЅРёРІР°РµРј РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ РІ СЃРїРёСЃРѕРє:
 	Temp->pPrev->pNext = New;
 	Temp->pPrev = New;
 
@@ -389,22 +407,22 @@ template<typename T>
 void List<T>::pop_front()
 {
 	if (Head == nullptr && Head == nullptr)return;
-	if (Head == Tail)//Если голова и хвост равны, значит они указывают либо на ноль, 
-		//либо на один и тот же элемент
-		//Ситуацию с пустым списком обрабатывает предыдущее условие
-		//Ситуацию с вырожденным спском обрабатывает текущее условие 
-		// и в этом if удаляется один единственный элемент списка
+	if (Head == Tail)//Р•СЃР»Рё РіРѕР»РѕРІР° Рё С…РІРѕСЃС‚ СЂР°РІРЅС‹, Р·РЅР°С‡РёС‚ РѕРЅРё СѓРєР°Р·С‹РІР°СЋС‚ Р»РёР±Рѕ РЅР° РЅРѕР»СЊ, 
+		//Р»РёР±Рѕ РЅР° РѕРґРёРЅ Рё С‚РѕС‚ Р¶Рµ СЌР»РµРјРµРЅС‚
+		//РЎРёС‚СѓР°С†РёСЋ СЃ РїСѓСЃС‚С‹Рј СЃРїРёСЃРєРѕРј РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚ РїСЂРµРґС‹РґСѓС‰РµРµ СѓСЃР»РѕРІРёРµ
+		//РЎРёС‚СѓР°С†РёСЋ СЃ РІС‹СЂРѕР¶РґРµРЅРЅС‹Рј СЃРїСЃРєРѕРј РѕР±СЂР°Р±Р°С‚С‹РІР°РµС‚ С‚РµРєСѓС‰РµРµ СѓСЃР»РѕРІРёРµ 
+		// Рё РІ СЌС‚РѕРј if СѓРґР°Р»СЏРµС‚СЃСЏ РѕРґРёРЅ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ СЃРїРёСЃРєР°
 	{
 		delete Head;
 		Head = Tail = nullptr;
 	}
 	else
-	{//Общий случай:
-		// 1. Смещаем Голову на следующий элемент:
+	{//РћР±С‰РёР№ СЃР»СѓС‡Р°Р№:
+		// 1. РЎРјРµС‰Р°РµРј Р“РѕР»РѕРІСѓ РЅР° СЃР»РµРґСѓСЋС‰РёР№ СЌР»РµРјРµРЅС‚:
 		Head = Head->pNext;
-		//Удаляем элемент из памяти
+		//РЈРґР°Р»СЏРµРј СЌР»РµРјРµРЅС‚ РёР· РїР°РјСЏС‚Рё
 		delete Head->pPrev;
-		//Обнуляем указатель на удаленный элемент (Делаем Хед последним элементом списка)
+		//РћР±РЅСѓР»СЏРµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР° СѓРґР°Р»РµРЅРЅС‹Р№ СЌР»РµРјРµРЅС‚ (Р”РµР»Р°РµРј РҐРµРґ РїРѕСЃР»РµРґРЅРёРј СЌР»РµРјРµРЅС‚РѕРј СЃРїРёСЃРєР°)
 		Head->pPrev = nullptr;
 	}
 	size--;
@@ -438,7 +456,7 @@ void List<T>::print()const
 	for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 		cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 	cout << "Tail: " << Tail << endl;
-	cout << "Количество элементов списка: " << size;
+	cout << "РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ СЃРїРёСЃРєР°: " << size;
 	cout << delimiter << endl;
 }template<typename T>
 void List<T>::reverse_print()const
@@ -448,7 +466,7 @@ void List<T>::reverse_print()const
 	for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
 		cout << Temp->pPrev << tab << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 	cout << "Head: " << Head << endl;
-	cout << "Количество элементов списка: " << size;
+	cout << "РљРѕР»РёС‡РµСЃС‚РІРѕ СЌР»РµРјРµРЅС‚РѕРІ СЃРїРёСЃРєР°: " << size;
 	cout << delimiter << endl;
 }
 
@@ -528,7 +546,7 @@ void main()
 
 	List<double> d_list = { 2.7, 3.14, 5.8, 8.3 };
 	for (double i : d_list)cout << i << tab; cout << endl;
-	List < std::string> s_list = { "Хорошо", "живёт", "на", "Свете", "Винни", "Пух" };
+	List < std::string> s_list = { "РҐРѕСЂРѕС€Рѕ", "Р¶РёРІС‘С‚", "РЅР°", "РЎРІРµС‚Рµ", "Р’РёРЅРЅРё", "РџСѓС…" };
 	for (std::string i : s_list)cout << i << tab; cout << endl;
 	for (List<std::string>::ReverseIterator it = s_list.rbegin(); it != s_list.rend(); ++it)
 		cout << *it << tab;
