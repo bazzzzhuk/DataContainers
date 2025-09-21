@@ -8,7 +8,7 @@ void elevator(int floor);
 unsigned long long int factorial(int n);
 unsigned long long int power(int a, int n);
 unsigned long long int fibona44i(int n);
-unsigned long long int fibona44i_inside(int  n, unsigned long long int  prev2, unsigned long long int  prev1);
+unsigned long long int fibona44i_inside(int  n, unsigned long long int  f_prev_2, unsigned long long int f_prev_1);
 
 
 void main()
