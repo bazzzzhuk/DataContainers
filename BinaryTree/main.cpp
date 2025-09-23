@@ -5,6 +5,7 @@ using namespace std;
 
 class Tree
 {
+protected:
 	class Element
 	{
 		int Data;
@@ -21,6 +22,7 @@ class Tree
 			cout << "EDestructor:\t" << this << endl;
 		}
 		friend class Tree;
+		friend class UTree;
 	}*Root;
 public:
 	Element* getroot()const
@@ -35,8 +37,8 @@ public:
 	{
 		cout << "TDestructor:\t" << this << endl;
 	}
-	void insert(int Data, Element* Root)
-	{
+	virtual void insert(int Data, Element* Root)
+	{		
 		if (this->Root == nullptr) this->Root = new Element(Data);
 		if (Root == nullptr)return;
 		if (Data < Root->Data)
@@ -69,6 +71,23 @@ public:
 		else return count(Root->pLeft) + count(Root->pRight) + 1;*/
 
 	}
+	double sum(Element* Root)const
+	{
+		return !Root ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
+	}
+	
+	double avg(Element* Root)const
+	{
+		return sum(Root) / count(Root);
+	}
+	void clear(Element* Root)
+	{
+		if (Root == nullptr)return;
+		clear(Root->pLeft);
+		clear(Root->pRight);
+		delete Root;
+		this->Root = nullptr;
+	}
 	void print(Element* Root)const
 	{
 		if (Root == nullptr)return;
@@ -76,6 +95,34 @@ public:
 		cout << Root->Data << tab;
 		print(Root->pRight);
 	}
+};
+class UTree :public Tree
+{
+public:
+	bool unique(int Data, Element* Root)const
+	{
+		/*if (Root == nullptr)return;
+		unique(Data, Root->pLeft);
+		unique(Data, Root->pRight);*/
+		return !Root ? 0 : Root->Data == Data ? 1 : count(Root->pLeft)+ count(Root->pRight);
+	}
+	void insert(int Data, Element* Root)override 
+	{
+		if (unique(Data, Root))return;
+		if (this->Root == nullptr) this->Root = new Element(Data);
+		if (Root == nullptr)return;
+		if (Data < Root->Data)
+		{
+			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
+			else insert(Data, Root->pLeft);
+		}
+		else
+		{
+			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
+			else insert(Data, Root->pRight);
+		}
+	}
+
 };
 
 void main()
@@ -94,4 +141,20 @@ void main()
 	cout<<"Min value ---> "<<tree.minValue(tree.getroot())<<endl;
 	cout<<"Max value ---> "<<tree.maxValue(tree.getroot())<<endl;
 	cout << "Count Elements: " << tree.count(tree.getroot()) << endl;
+	cout << "sum Elements: " << tree.sum(tree.getroot()) << endl;
+	cout << "avg Elements: " << tree.avg(tree.getroot()) << endl;
+	tree.clear(tree.getroot());
+	cout << "-------" << endl;
+	tree.print(tree.getroot());
+
+	UTree utree;
+	utree.print(utree.getroot());
+	utree.insert(34, utree.getroot());
+	for (int i = 0; i < n; i++)
+	{
+		utree.insert(rand() % 100, utree.getroot());
+	}
+
+	utree.print(utree.getroot());
+
 }
