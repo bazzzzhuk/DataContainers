@@ -15,11 +15,15 @@ protected:
 		Element(int Data, Element* pLeft = nullptr, Element* pRight = nullptr) :
 			Data(Data), pLeft(pLeft), pRight(pRight)
 		{
+#ifdef DEBUG
 			cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
 		}
 		~Element()
 		{
+#ifdef DEBUG
 			cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
 		}
 		friend class Tree;
 		friend class UTree;
@@ -99,16 +103,8 @@ public:
 class UTree :public Tree
 {
 public:
-	bool unique(int Data, Element* Root)const
-	{
-		/*if (Root == nullptr)return;
-		unique(Data, Root->pLeft);
-		unique(Data, Root->pRight);*/
-		return !Root ? 0 : Root->Data == Data ? 1 : count(Root->pLeft)+ count(Root->pRight);
-	}
 	void insert(int Data, Element* Root)override 
 	{
-		if (unique(Data, Root))return;
 		if (this->Root == nullptr) this->Root = new Element(Data);
 		if (Root == nullptr)return;
 		if (Data < Root->Data)
@@ -116,13 +112,12 @@ public:
 			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
 			else insert(Data, Root->pLeft);
 		}
-		else
+		else if(Data > Root->Data)
 		{
 			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
 			else insert(Data, Root->pRight);
 		}
 	}
-
 };
 
 void main()
@@ -152,8 +147,9 @@ void main()
 	utree.insert(34, utree.getroot());
 	for (int i = 0; i < n; i++)
 	{
-		utree.insert(rand() % 100, utree.getroot());
+		utree.insert(rand() % 10, utree.getroot());
 	}
+	cout << "Count Elements: " << utree.count(utree.getroot()) << endl;
 
 	utree.print(utree.getroot());
 
