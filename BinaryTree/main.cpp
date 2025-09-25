@@ -89,6 +89,14 @@ public:
 	{
 		return (double)sum(Root) / count(Root);
 	}
+	int depth()const
+	{
+		return depth(Root);
+	}
+	int depth(int Data)const
+	{
+		return depth(Data, Root);
+	}
 	void print()const
 	{
 		print(Root);
@@ -175,6 +183,15 @@ private:
 	{
 		return Root == nullptr ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
 	}
+	/// >>--->
+	int depth(Element* Root)const
+	{
+		return !Root?0:1 + (depth(Root->pLeft) < depth(Root->pRight) ? depth(Root->pRight) : depth(Root->pLeft));
+	}
+	int depth(int Data, Element* Root)const
+	{
+		return Data == Root->Data ? 0 : 1 + (Data < Root->Data ? depth(Data, Root->pLeft) : depth(Data, Root->pRight));
+	}
 	void print(Element* Root)const
 	{
 		if (Root == nullptr)return;
@@ -182,6 +199,7 @@ private:
 		cout << Root->Data << tab;
 		print(Root->pRight);
 	}
+
 };
 class UniqueTree :public Tree
 {
@@ -206,6 +224,10 @@ public:
 		insert(Data, Root);
 	}
 };
+
+
+
+
 //#define BASE_CHECK
 void main()
 {
@@ -245,12 +267,16 @@ void main()
 	{ 
 				50,
 		25,				75,
-	16,     32,		 58,   85 
+	16,     32,		 58,   85 ,
+	8, 17, 31,  39,54, 60,83,90,53
 	};
 	tree.print();
 	int value;
 	cout << "Enter erase element: ";  cin >> value;
 	tree.erase(value);
 	tree.print();
+	cout << "Depth: " << tree.depth() << endl;
+	cout << "Enter element: "; cin >> value;
+	cout << "Depth element"<< " value : " << tree.depth(value) << endl;
 	
 }
