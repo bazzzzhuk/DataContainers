@@ -204,34 +204,32 @@ private:
 		print(Root->pLeft);
 		cout << Root->Data << tab;
 		print(Root->pRight);
-	}/*
-	int** insert_arr(int* arr, int a)
-	{
-		int rows = depth();
-		int cols = rows * 2;
-		int* arr = new int[rows];
-		for (int i = 0; i < rows; i++)
-		{
-			arr[i] = new int[cols];
-		}
-		return arr;
-	}*/
+	}
+	
 	void tree_print(Element* Root, int level)const
-	{/*
+	{
 		if (Root)
 		{
 			cout << Root->Data;
+			for (int i = 0; i < --level; ++i) cout << "__";
 			tree_print(Root->pLeft, level + 1);
+			cout << endl;
 			tree_print(Root->pRight, level + 1);
-			for (int i = 0; i < level; i++) cout << "_" << endl;
-		}*/
+		}
 
-		//()
+		////()
+		//int rows = depth();
+		//int cols = rows * 2;
+		//int** arr = new int* [rows];
+		//for (int i = 0; i < rows; i++)
+		//{
+		//	arr[i] = new int[cols] {0};
+		//}
 
-	if (Root == nullptr)return;
-	cout << Root->Data << tab;
-	tree_print(Root->pLeft,level);
-	tree_print(Root->pRight,level);
+		//if (!Root)return;
+		//cout << Root->Data<<" ";
+		//tree_print(Root->pLeft, level);
+		//tree_print(Root->pRight, level);
 	}
 
 };
@@ -258,8 +256,8 @@ public:
 		insert(Data, Root);
 	}
 };
-#define BASE_CHECK
-//#define DEPTH_CHECK
+//#define BASE_CHECK
+#define DEPTH_CHECK
 
 void main()
 {
@@ -288,7 +286,7 @@ void main()
 	t_start = clock();
 	tree.count();
 	t_end = clock();
-	cout << "Count Elements: " <<double(t_end - t_start) / CLOCKS_PER_SEC << " sec."  <<endl;
+	cout << "Count Elements: " << double(t_end - t_start) / CLOCKS_PER_SEC << " sec." << endl;
 	t_start = clock();
 	tree.sum();
 	t_end = clock();
@@ -308,7 +306,7 @@ void main()
 	cout << "Sum Elements: " << u_tree.sum() << endl;
 	cout << "AVG Elements: " << u_tree.avg() << endl;*/
 #endif // BASE_CHECK
-#ifdef TIME_CHECK
+#ifdef DEPTH_CHECK
 	Tree tree =
 	{
 				50,
