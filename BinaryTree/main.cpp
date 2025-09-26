@@ -210,11 +210,14 @@ private:
 	{
 		if (Root)
 		{
-			cout << Root->Data;
-			for (int i = 0; i < --level; ++i) cout << "__";
-			tree_print(Root->pLeft, level + 1);
+			if (depth(Root->Data) == level)
+			{
+				for (int i = 0; i < level--; ++i) cout << "__";
+				cout << Root->Data;
+			}
+			tree_print(Root->pLeft, level - 1);
 			cout << endl;
-			tree_print(Root->pRight, level + 1);
+			tree_print(Root->pRight, level - 1);
 		}
 
 		////()
