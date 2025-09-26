@@ -1,11 +1,12 @@
 #include<iostream>
+#include<time.h>
 using namespace std;
 using std::cout;
 using std::cin;
 using std::endl;
 
 #define tab "\t"
-#define DEBUG
+//#define DEBUG
 
 class Tree
 {
@@ -88,6 +89,10 @@ public:
 	double avg()const
 	{
 		return (double)sum(Root) / count(Root);
+	}
+	int depth()const
+	{
+		return depth(Root);
 	}
 	void print()const
 	{
@@ -175,6 +180,13 @@ private:
 	{
 		return Root == nullptr ? 0 : sum(Root->pLeft) + sum(Root->pRight) + Root->Data;
 	}
+	int depth(Element* Root)const
+	{
+		return Root == nullptr ? 0 :
+			depth(Root->pLeft) + 1 > depth(Root->pRight) + 1 ?
+			depth(Root->pLeft) + 1:
+		depth(Root->pRight)+1;
+	}
 	void print(Element* Root)const
 	{
 		if (Root == nullptr)return;
@@ -206,7 +218,21 @@ public:
 		insert(Data, Root);
 	}
 };
+
+template<typename T>
+void measure_performance(const char message[], T(Tree::*function)()const, const Tree& tree)
+{
+	//int* (function)() - указатель на функцию которая ничего не принимает и возвращает значение типа инт
+	clock_t start = clock();
+	T rezult = (tree.*function)();
+	clock_t end = clock();
+	cout <<message<<rezult<< " \t\t\tВычеслено за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+}
+
 //#define BASE_CHECK
+//#define ERASE_CHECK
+
+
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -240,17 +266,43 @@ void main()
 	cout << "Sum Elements: " << u_tree.sum() << endl;
 	cout << "AVG Elements: " << u_tree.avg() << endl;
 #endif // BASE_CHECK
+#ifdef ERASE_CHECK
 
-	Tree tree = 
-	{ 
+	Tree tree =
+	{
 				50,
 		25,				75,
-	16,     32,		 58,   85 
+	16,     32,		 58,   85,91,98
 	};
 	tree.print();
-	int value;
+	/*int value;
 	cout << "Enter erase element: ";  cin >> value;
-	tree.erase(value);
+	tree.erase(value);*/
 	tree.print();
-	
+	cout << "Depth tree: " << tree.depth() << endl;
+#endif // ERASE_CHECK
+
+
+	int n;
+	cout << "Enter count elements: "; cin >> n;
+	cout << "Hello Tree" << endl;
+	Tree tree;
+	for (int i = 0; i < n; i++)
+	{
+		tree.insert(rand() % 100);
+	}
+	/*tree.print();
+	cout << endl;
+	cout << "Min value ---> " << tree.minValue() << endl;
+	cout << "Max value ---> " << tree.maxValue() << endl;
+	cout << "Count Elements: " << tree.count() << endl;
+	cout << "Sum Elements: " << tree.sum() << endl;
+	cout << "AVG Elements: " << tree.avg() << endl;
+	cout << "Tree depth: " << tree.depth() << endl;*/
+	measure_performance("Минимальное значение в дереве: ", &Tree::minValue, tree);
+	measure_performance("Максимальное значение в дереве: ", &Tree::maxValue, tree);
+	measure_performance("Количество элементов в дереве: ", &Tree::count, tree);
+	measure_performance("Сумма элементов значение в дереве: ", &Tree::sum, tree);
+	measure_performance("Средне-арифметическое элементов значение в дереве: ", &Tree::avg, tree);
+
 }
