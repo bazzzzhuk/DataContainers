@@ -95,6 +95,15 @@ public:
 	{
 		return depth(Root);
 	}
+	void depth_print(int depth, int width=4)const
+	{
+		depth_print(depth, Root, width);
+		cout << endl;
+	}
+	void tree_print()const
+	{
+		tree_print(depth(),4*depth()/4);
+	}
 	void print()const
 	{
 		print(Root);
@@ -193,7 +202,25 @@ private:
 		int r_depth = depth(Root->pRight)+1;
 		return l_depth < r_depth ? r_depth : l_depth;*/
 
-		return Root == nullptr ? 0 : std::max(depth(Root->pLeft) + 1, depth(Root->pRight));
+		return Root == nullptr ? 0 : std::max(depth(Root->pLeft)+1, depth(Root->pRight)+1);
+	}
+	void depth_print(int depth, Element* Root, int width)const
+	{
+		if (Root == nullptr)return;
+		if (depth == 0)
+		{
+			cout.width(width-depth*3);
+			cout << Root->Data;
+		}
+		depth_print(depth - 1, Root->pLeft, width);
+		depth_print(depth - 1, Root->pRight, width);
+	}
+	void tree_print(int depth, int width)const
+	{
+		if (depth == -1)return;
+		tree_print(depth - 1, width*1.55);
+		depth_print(depth-1, width);	
+		cout << endl;
 	}
 	void print(Element* Root)const
 	{
@@ -239,7 +266,8 @@ void measure_performance(const char message[], T(Tree::*function)()const, const 
 
 //#define BASE_CHECK
 //#define ERASE_CHECK
-#define PERFORMANCE_CHECK
+#define DEPTH_CHECK
+//#define PERFORMANCE_CHECK
 
 
 void main()
@@ -291,6 +319,20 @@ void main()
 	tree.print();
 	cout << "Depth tree: " << tree.depth() << endl;
 	measure_performance("Глубина дерева: ", &Tree::depth, tree);
+#endif // ERASE_CHECK
+#ifdef DEPTH_CHECK
+
+	Tree tree =
+	{
+				50,
+		25,				75,
+	16,     32,		 58,   85,91,98
+	};
+	tree.print();
+	cout << "Depth tree: " << tree.depth() << endl;
+	//tree.depth_print(1);
+	tree.tree_print();
+
 #endif // ERASE_CHECK
 #ifdef PERFORMANCE_CHECK
 	int n;
