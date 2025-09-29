@@ -58,6 +58,10 @@ public:
 		clear(Root);
 		cout << "TDestructor:\t" << this << endl;
 	}
+	void balance()
+	{
+		balance(Root);
+	}
 	void clear()
 	{
 		return clear(Root);
@@ -95,14 +99,14 @@ public:
 	{
 		return depth(Root);
 	}
-	void depth_print(int depth, int width=4)const
+	void depth_print(int depth, int width = 4)const
 	{
 		depth_print(depth, Root, width);
 		cout << endl;
 	}
 	void tree_print()const
 	{
-		tree_print(depth(),4*depth()/4);
+		tree_print(depth(), 4 * depth() / 4);
 	}
 	void print()const
 	{
@@ -111,6 +115,30 @@ public:
 	}
 
 private:
+	void balance(Element* Root)
+	{
+		if (Root == nullptr)return;
+
+		if (abs(count(Root->pLeft) - count(Root->pRight)) <= 2)return;
+		if (count(Root->pLeft) < count(Root->pRight))
+		{
+			if (Root->pLeft)insert(Root->Data, Root->pLeft);
+			else Root->pLeft - new Element(Root->Data);
+			Root->Data = minValue(Root->pRight);
+			erase(minValue(Root->pRight), Root->pRight);
+			//balance(Root);
+		}
+		if (count(Root->pLeft) > count(Root->pRight))
+		{
+			if (Root->pRight)insert(Root->Data, Root->pRight);
+			else Root->pRight = new Element(Root->Data);
+			Root->Data = maxValue(Root->pLeft);
+			erase(maxValue(Root->pLeft), Root->pLeft);
+		}
+		balance(Root->pLeft);
+		balance(Root->pRight);
+		balance(Root);
+	}
 	void clear(Element*& Root)
 	{
 		if (Root == nullptr)return;
@@ -169,7 +197,7 @@ private:
 	}
 	int minValue(Element* Root)const
 	{
-		return Root==nullptr? 0 : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
+		return Root == nullptr ? 0 : Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
 		/*if (Root->pLeft == nullptr) return Root->Data;
 		else return minValue(Root->pLeft);*/
 	}
@@ -202,14 +230,19 @@ private:
 		int r_depth = depth(Root->pRight)+1;
 		return l_depth < r_depth ? r_depth : l_depth;*/
 
-		return Root == nullptr ? 0 : std::max(depth(Root->pLeft)+1, depth(Root->pRight)+1);
+		return Root == nullptr ? 0 : std::max(depth(Root->pLeft) + 1, depth(Root->pRight) + 1);
 	}
 	void depth_print(int depth, Element* Root, int width)const
 	{
-		if (Root == nullptr)return;
+		if (Root == nullptr)
+		{
+			/*cout.width(width/width/2);
+			cout << "";*/
+			return;
+		}
 		if (depth == 0)
 		{
-			cout.width(width-depth*3);
+			cout.width(width*1.3);
 			cout << Root->Data;
 		}
 		depth_print(depth - 1, Root->pLeft, width);
@@ -217,9 +250,14 @@ private:
 	}
 	void tree_print(int depth, int width)const
 	{
-		if (depth == -1)return;
-		tree_print(depth - 1, width*1.55);
-		depth_print(depth-1, width);	
+		if (depth == -1)
+		{
+			/*cout.width(width);
+			cout << " ";*/
+			return;
+		}
+		tree_print(depth - 1, width * 1.55);
+		depth_print(depth - 1, width);
 		cout << endl;
 	}
 	void print(Element* Root)const
@@ -241,7 +279,7 @@ class UniqueTree :public Tree
 			if (Root->pLeft == nullptr)Root->pLeft = new Element(Data);
 			else insert(Data, Root->pLeft);
 		}
-		else if(Data > Root->Data)
+		else if (Data > Root->Data)
 		{
 			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
 			else insert(Data, Root->pRight);
@@ -255,13 +293,13 @@ public:
 };
 
 template<typename T>
-void measure_performance(const char message[], T(Tree::*function)()const, const Tree& tree)
+void measure_performance(const char message[], T(Tree::* function)()const, const Tree& tree)
 {
 	//int* (function)() - указатель на функцию которая ничего не принимает и возвращает значение типа инт
 	clock_t start = clock();
 	T rezult = (tree.*function)();
 	clock_t end = clock();
-	cout <<message<<rezult<< " \t\t\tВычеслено за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
+	cout << message << rezult << " \t\t\tВычеслено за " << double(end - start) / CLOCKS_PER_SEC << " секунд\n";
 }
 
 //#define BASE_CHECK
@@ -326,12 +364,18 @@ void main()
 	{
 				50,
 		25,				75,
-	16,     32,		 58,   85,91,98
+	16,     32,		 58,   85//,91//,98
 	};
 	tree.print();
 	cout << "Depth tree: " << tree.depth() << endl;
 	//tree.depth_print(1);
 	tree.tree_print();
+
+	Tree tree2 = { 55,34,21,13,8,5,3 };
+	tree2.tree_print();
+	tree2.balance();
+	tree2.tree_print();
+
 
 #endif // ERASE_CHECK
 #ifdef PERFORMANCE_CHECK
