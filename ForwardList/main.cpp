@@ -318,7 +318,7 @@ ForwardList operator+(const ForwardList& left, const ForwardList& right)
 //#define	BASE_CHECK	
 //#define PLUS_CHECK
 //#define PERFORMANCE_CHECK
-//#define SUBSCRIPTOR_OPER_CHECK
+#define SUBSCRIPTOR_OPER_CHECK
 //#define COPY_SEMANTIC_PERFORMANCE_CHECK
 //#define MOVE_SEMANTIC_CHECK
 //#define RANGE_BASED_FOR_ARRAY
@@ -426,6 +426,7 @@ void main()
 	system("PAUSE");
 	for (int i = 0; i < list.get_count(); i++)cout << list[i] << tab;
 	cout << endl;
+
 #endif // SUBSCRIPTOR_OPER_CHECK
 #ifdef COPY_SEMANTIC_PERFORMANCE_CHECK
 
@@ -491,12 +492,12 @@ void main()
 	Print(arr);
 #endif // RANGE_BASED_FOR_ARRAY
 
-	ForwardList list = { 3,5,8,13,21 };// Перечисление значений в фигурных скобках через запятую неявно создают объект класса 'initializer list'
-	list.print();
-	for (int i : list)cout << i << tab; cout << endl;
-	cout << DELIMETER << endl;
-	for (Iterator it = list.begin(); it != list.end(); ++it)
-	{
-		cout << *it << endl;
-	}
+	//ForwardList list = { 3,5,8,13,21 };// Перечисление значений в фигурных скобках через запятую неявно создают объект класса 'initializer list'
+	//list.print();
+	//for (int i : list)cout << i << tab; cout << endl;
+	//cout << DELIMETER << endl;
+	//for (Iterator it = list.begin(); it != list.end(); ++it)
+	//{
+	//	cout << *it << endl;
+	//}
 }
