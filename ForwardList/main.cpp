@@ -157,20 +157,11 @@ public:
 	}
 	int& operator[](int index)
 	{
-		try
-		{
+		if (index >= count)throw std::out_of_range("FW_out_of_range!");
 			Element* Temp = Head;
 			for (int i = 0; i < index; i++)Temp = Temp->pNext;
 			return Temp->Data;
-		}
-		catch (const std::exception& e)
-		{
-			std::cerr << "!!!" << endl;
-		}
-		catch (...)
-		{
-			std::cerr << "!!!" << endl;
-		}
+		
 	}
 
 
@@ -434,23 +425,18 @@ void main()
 		list[i] = rand() % 100;
 	end = clock();
 	cout << "List DONE in " << double(end - start) / CLOCKS_PER_SEC << "  sec." << endl;
-	system("PAUSE");
-	for (int i = 0; i < list.get_count(); i++)cout << list[i] << tab;
-	cout << endl;
-	cout << DELIMETER;
+	//system("PAUSE");
 	try
 	{
-		cout << list[111];
+		for (int i = 0; i < list.get_count() * 2000; i++)cout << list[i] << tab;
+		cout << endl;
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "!!!!!!" << endl;
+		std::cerr << e.what() << endl;
 	}
-	catch (...)
-	{
-		std::cerr << "!!!!!!" << endl;
-	}
-
+	cout << DELIMETER;
+	
 	cout << DELIMETER;
 
 #endif // SUBSCRIPTOR_OPER_CHECK
