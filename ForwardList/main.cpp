@@ -157,9 +157,20 @@ public:
 	}
 	int& operator[](int index)
 	{
-		Element* Temp = Head;
-		for (int i = 0; i < index; i++)Temp = Temp->pNext;
-		return Temp->Data;
+		try
+		{
+			Element* Temp = Head;
+			for (int i = 0; i < index; i++)Temp = Temp->pNext;
+			return Temp->Data;
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "!!!" << endl;
+		}
+		catch (...)
+		{
+			std::cerr << "!!!" << endl;
+		}
 	}
 
 
@@ -426,6 +437,21 @@ void main()
 	system("PAUSE");
 	for (int i = 0; i < list.get_count(); i++)cout << list[i] << tab;
 	cout << endl;
+	cout << DELIMETER;
+	try
+	{
+		cout << list[111];
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "!!!!!!" << endl;
+	}
+	catch (...)
+	{
+		std::cerr << "!!!!!!" << endl;
+	}
+
+	cout << DELIMETER;
 
 #endif // SUBSCRIPTOR_OPER_CHECK
 #ifdef COPY_SEMANTIC_PERFORMANCE_CHECK
